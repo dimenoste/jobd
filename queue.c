@@ -1,19 +1,18 @@
+#include <err.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <err.h>
-
 
 typedef struct node
 {
-    int		value;
-    struct node	*next;
-}			node;
+	int			value;
+	struct node	*next;
+}				node;
 
 typedef struct queue
 {
-	node	*head;
-	node	*tail;
-}			queue;
+	node		*head;
+	node		*tail;
+}				queue;
 
 node	*create_node(int value)
 {
@@ -29,20 +28,23 @@ node	*create_node(int value)
 	return (first);
 }
 
-void	init_queue(int first_value)
+queue	*init_queue(int first_value)
 {
-    queue *queue;
+	queue	*queue;
 	node	*first_node;
-	first_node = create_node(first_value);
 
+	queue = malloc(sizeof(queue));
+	if (queue == NULL)
+	{
+		return (NULL);
+	}
+	first_node = create_node(first_value);
 	queue->head = first_node;
 	queue->tail = first_node;
-    
-    queue = malloc(sizeof(queue));
-	return ;
+	return (queue);
 }
 
-void enqueue(queue *queue, int new_value)
+void	enqueue(queue *queue, int new_value)
 {
 	node	*node;
 
@@ -60,47 +62,88 @@ void enqueue(queue *queue, int new_value)
 	return ;
 }
 
-
-void dequeue(queue *queue)
+void	dequeue(queue *queue)
 {
+	node	*head;
 
-    node *head;
-    
-    head = queue->head;
-    if (queue->head->next != NULL)
-    {
-        return ;
-    }
-    queue->head = queue->head->next;
-    free(head);
-    return ;
+	if (queue->head == NULL)
+	{
+		return ;
+	}
+	head = queue->head;
+	queue->head = queue->head->next;
+	free(head);
+	return ;
 }
 
-
-
-void queue_free(queue *queue)
+void	display_queue(queue *queue)
 {
-    node	*node;
+	node	*node;
 
 	if (queue == NULL || queue->head == NULL)
 	{
 		return ;
 	}
 	node = queue->head;
-    while(queue->head != NULL)
-    {
-        dequeue(queue);
-    }
+	while (node != NULL)
+	{
+		printf("value of node %d\n", node->value);
+		node = node->next;
+	}
 	return ;
 }
 
-int main(void)
+void	queue_free(queue *queue)
 {
+	node	*node;
 
+	if (queue == NULL || queue->head == NULL)
+	{
+		return ;
+	}
+	node = queue->head;
+	while (queue->head != NULL)
+	{
+		dequeue(queue);
+	}
+	return ;
+}
 
-    
-    queue = init_queue(10);
-    printf("queue first node value is %d\n", queue->head->value);
-    printf("queue last node value is %d\n", queue->tail->value);
-    return (0);
+int	size_queue(queue *queue)
+{
+	int		i;
+	node	*node;
+
+	i = 0;
+	if (queue == NULL || queue->head == NULL)
+	{
+		return (i);
+	}
+	node = queue->head;
+	while (node != NULL)
+	{
+		i++;
+		node = node->next;
+	}
+	return (i);
+}
+
+int	main(void)
+{
+	queue *queue;
+
+	printf("len of queue is %d\n", size_queue(queue));
+	queue = init_queue(10);
+	printf("queue first node value is %d\n", queue->head->value);
+	printf("queue last node value is %d\n", queue->tail->value);
+
+	enqueue(queue, 15);
+	display_queue(queue);
+	printf("len of queue is %d\n", size_queue(queue));
+
+	queue_free(queue);
+	display_queue(queue);
+	printf("len of queue is %d\n", size_queue(queue));
+
+	return (0);
 }
