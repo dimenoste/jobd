@@ -2,17 +2,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-typedef struct node
-{
-	int			value;
-	struct node	*next;
-}				node;
 
-typedef struct queue
-{
-	node		*head;
-	node		*tail;
-}				queue;
 
 node	*create_node(int value)
 {
@@ -147,3 +137,5 @@ int	main(void)
 
 	return (0);
 }
+
+
